@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, memo } from "react";
+import { Component, Suspense, useEffect, useMemo, useRef, memo } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   useGLTF,
@@ -12,6 +12,8 @@ import {
   useScroll,
   useSpring,
 } from "framer-motion";
+
+const MODEL_URL = `${import.meta.env.BASE_URL}around_the_world_in_80_models_posts.glb`;
 
 // --- REFINED CONTENT DATA (UNTOUCHED) ---
 const visionPillars = [
@@ -89,7 +91,7 @@ const ScrollRevealText = ({ value }) => {
 const NetworkModel = memo(({ scrollProgress }) => {
   const group = useRef();
   const elapsed = useRef(0);
-  const { scene } = useGLTF("/around_the_world_in_80_models_posts.glb");
+  const { scene } = useGLTF(MODEL_URL);
   const model = useMemo(() => scene.clone(true), [scene]);
 
   useEffect(() => {
@@ -116,6 +118,37 @@ const NetworkModel = memo(({ scrollProgress }) => {
     </group>
   );
 });
+
+class ModelErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Html center>
+          <div className="rounded-2xl border border-white/15 bg-[#02040a]/95 px-6 py-4 text-center text-sm text-white/70 shadow-2xl">
+            <p className="font-semibold uppercase tracking-[0.3em] text-[#f6c76d]">
+              3D model unavailable
+            </p>
+            <p className="mt-2 max-w-xs">
+              The About page will still load. The model asset was not available,
+              so we are showing the content without the 3D scene.
+            </p>
+          </div>
+        </Html>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function ModelLoader() {
   return (
@@ -180,12 +213,14 @@ export default function AboutPage() {
             <div className="relative h-[72vh] min-h-[520px] w-full">
               <Canvas camera={{ position: [0, 0, 12], fov: 32 }} gl={{ antialias: true, alpha: true }} className="h-full w-full">
                 <Suspense fallback={<ModelLoader />}>
-                  <Stage adjustCamera={1.08} intensity={0.9} environment="city" shadows={false} preset="rembrandt">
-                    <group scale={1.18}>
-                      <NetworkModel scrollProgress={smoothScroll} />
-                    </group>
-                  </Stage>
-                  <OrbitControls makeDefault enablePan={false} enableZoom={false} enableDamping dampingFactor={0.08} rotateSpeed={0.55} />
+                  <ModelErrorBoundary>
+                    <Stage adjustCamera={1.08} intensity={0.9} environment="city" shadows={false} preset="rembrandt">
+                      <group scale={1.18}>
+                        <NetworkModel scrollProgress={smoothScroll} />
+                      </group>
+                    </Stage>
+                    <OrbitControls makeDefault enablePan={false} enableZoom={false} enableDamping dampingFactor={0.08} rotateSpeed={0.55} />
+                  </ModelErrorBoundary>
                 </Suspense>
               </Canvas>
             </div>
@@ -269,4 +304,4 @@ export default function AboutPage() {
   );
 }
 
-useGLTF.preload("/around_the_world_in_80_models_posts.glb");
+useGLTF.preload(MODEL_URL);
