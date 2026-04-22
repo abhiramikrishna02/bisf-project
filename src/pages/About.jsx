@@ -1,18 +1,16 @@
-import { Suspense, useMemo, useRef, memo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef, memo } from "react";
+import { Canvas } from "@react-three/fiber";
 import {
   useGLTF,
   Stage,
   OrbitControls,
   Html,
-  useProgress,
 } from "@react-three/drei";
 import {
   motion as Motion,
   useInView,
   useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
 
 // --- REFINED CONTENT DATA (UNTOUCHED) ---
@@ -60,39 +58,28 @@ const BouncyReveal = ({ children, delay = 0 }) => {
   );
 };
 
-// --- CRED-STYLE SCROLL TEXT COMPONENTS (UNTOUCHED) ---
-const Word = ({ children, progress, range }) => {
-  const opacity = useTransform(progress, range, [0.2, 1]);
-  return (
-    <span className="relative mr-3 mt-2">
-      <span className="absolute opacity-20">{children}</span>
-      <Motion.span style={{ opacity }} className="text-white">
-        {children}
-      </Motion.span>
-    </span>
-  );
-};
-
 const ScrollRevealText = ({ value }) => {
   const element = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: element,
-    offset: ["start 0.9", "start 0.25"],
-  });
+  const isInView = useInView(element, { once: true, margin: "-15%" });
 
   const words = value.split(" ");
   return (
     <p
       ref={element}
-      className="flex flex-wrap text-2xl md:text-4xl font-light leading-tight"
+      className="relative flex flex-wrap text-2xl md:text-4xl font-light leading-tight"
     >
       {words.map((word, i) => {
-        const start = i / words.length;
-        const end = start + 1 / words.length;
         return (
-          <Word key={i} range={[start, end]} progress={scrollYProgress}>
-            {word}
-          </Word>
+          <Motion.span
+            key={i}
+            initial={{ opacity: 0.2, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0.2, y: 10 }}
+            transition={{ duration: 0.5, delay: i * 0.03 }}
+            className="relative mr-3 mt-2"
+          >
+            <span className="absolute opacity-20">{word}</span>
+            <Motion.span className="text-white">{word}</Motion.span>
+          </Motion.span>
         );
       })}
     </p>
@@ -101,18 +88,27 @@ const ScrollRevealText = ({ value }) => {
 
 const NetworkModel = memo(({ scrollProgress }) => {
   const group = useRef();
+  const elapsed = useRef(0);
   const { scene } = useGLTF("/around_the_world_in_80_models_posts.glb");
   const model = useMemo(() => scene.clone(true), [scene]);
 
-  useFrame((state) => {
-    if (!group.current) return;
-    const time = state.clock.getElapsedTime();
-    const scrollValue = scrollProgress.get();
-    const drift = scrollValue - 0.5;
-    group.current.rotation.y = time * 0.08 + drift * 0.8;
-    group.current.rotation.x = Math.sin(time * 0.08) * 0.05 + drift * 0.18;
-    group.current.position.y = Math.sin(time * 0.12) * 0.03 + drift * 0.08;
-  });
+  useEffect(() => {
+    let rafId = 0;
+    const tick = () => {
+      if (group.current) {
+        elapsed.current = performance.now() / 1000;
+        const time = elapsed.current;
+        const scrollValue = scrollProgress.get();
+        const drift = scrollValue - 0.5;
+        group.current.rotation.y = time * 0.08 + drift * 0.8;
+        group.current.rotation.x = Math.sin(time * 0.08) * 0.05 + drift * 0.18;
+        group.current.position.y = Math.sin(time * 0.12) * 0.03 + drift * 0.08;
+      }
+      rafId = window.requestAnimationFrame(tick);
+    };
+    rafId = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [scrollProgress]);
 
   return (
     <group ref={group}>
@@ -122,11 +118,10 @@ const NetworkModel = memo(({ scrollProgress }) => {
 });
 
 function ModelLoader() {
-  const { progress } = useProgress();
   return (
     <Html center>
       <div className="rounded-full border border-white/15 bg-[#02040a]/90 px-5 py-3 text-xs uppercase tracking-[0.35em] text-white/70">
-        Loading model {Math.round(progress)}%
+        Loading model...
       </div>
     </Html>
   );
@@ -159,7 +154,7 @@ export default function AboutPage() {
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[#02040a] text-white selection:bg-[#f6c76d] selection:text-black">
       <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(246,199,109,0.08),transparent_42%),radial-gradient(circle_at_right,rgba(96,165,250,0.08),transparent_32%),linear-gradient(180deg,#02040a_0%,#050816_100%)]" />
-      <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.03] bg-[url('https://res.cloudinary.com/dlbv8j7p2/image/upload/v1683216828/noise_v1_fm3_q_80_s_2_a_1_v_1_u_1_z_1_r_1_t_1_b_1_c_1_f_1_g_1_h_1_i_1_j_1_k_1_l_1_m_1_n_1_o_1_p_1_q_1_r_1_s_1_t_1_u_1_v_1_w_1_x_1_y_1_z_1.png')]" />
+      <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.06] bg-[radial-gradient(circle,rgba(255,255,255,0.11)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
       <main className="relative z-10 mx-auto max-w-7xl px-6 py-24 md:py-32 space-y-28">
         {/* HERO SECTION (UNTOUCHED) */}

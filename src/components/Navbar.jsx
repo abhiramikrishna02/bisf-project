@@ -1,31 +1,5 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Sphere } from "@react-three/drei";
-
-function LogoOrb() {
-  const mesh = useRef(null);
-
-  useFrame((state) => {
-    if (!mesh.current) return;
-    mesh.current.rotation.z = state.clock.getElapsedTime() * 0.5;
-    mesh.current.rotation.x = state.clock.getElapsedTime() * 0.15;
-  });
-
-  return (
-    <Float speed={5} rotationIntensity={2} floatIntensity={1}>
-      <Sphere ref={mesh} args={[1, 32, 32]} scale={1.8}>
-        <MeshDistortMaterial
-          color="#f6c76d"
-          distort={0.6}
-          speed={2}
-          transparent
-          opacity={0.12}
-        />
-      </Sphere>
-    </Float>
-  );
-}
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -52,10 +26,8 @@ export default function Navbar() {
           <div className="relative flex items-center justify-between px-5 py-3">
             <NavLink to="/" className="group relative flex items-center gap-4">
               <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-transform group-hover:scale-105">
-                <Canvas className="pointer-events-none absolute inset-0">
-                  <ambientLight intensity={1} />
-                  <LogoOrb />
-                </Canvas>
+                <div className="pointer-events-none absolute inset-1 rounded-2xl bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.45),transparent_18%),radial-gradient(circle_at_55%_55%,rgba(246,199,109,0.55),rgba(246,199,109,0.08)_48%,transparent_70%)] shadow-[inset_0_0_18px_rgba(246,199,109,0.18)]" />
+                <div className="pointer-events-none absolute inset-2 animate-[spin_18s_linear_infinite] rounded-full border border-white/10 border-t-[#f6c76d]/70 border-r-transparent border-b-transparent border-l-white/10" />
                 <span className="relative z-10 text-lg font-black tracking-tighter text-white">
                   B
                 </span>

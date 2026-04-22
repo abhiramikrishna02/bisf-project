@@ -137,14 +137,8 @@ const SectionWrapper = ({ children, className }) => (
 );
 
 export default function ServicesPage() {
-  const containerRef = useRef(null);
-  const heroRef = useRef(null);
-  
-  const { scrollYProgress } = useScroll({ target: containerRef });
-  const { scrollYProgress: heroScroll } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
+  const { scrollYProgress } = useScroll();
+  const heroScroll = scrollYProgress;
 
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
   
@@ -165,7 +159,7 @@ export default function ServicesPage() {
   };
 
   return (
-    <div ref={containerRef} className="bg-[#02040a] text-white selection:bg-[#f6c76d] selection:text-black relative">
+    <div className="relative bg-[#02040a] text-white selection:bg-[#f6c76d] selection:text-black">
       
       {/* --- PARALLAX BACKGROUND SYSTEM --- */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -181,7 +175,11 @@ export default function ServicesPage() {
           style={{ y: yBlob1, rotate: rotateBlob }}
           className="absolute top-[-6%] right-[-4%] w-[55vw] h-[55vw] bg-[#f6c76d]/10 blur-[110px] rounded-full"
         />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+        <Motion.div
+          style={{ y: yBlob2, rotate: useTransform(smoothProgress, [0, 1], [0, -30]) }}
+          className="absolute bottom-[-10%] left-[-8%] w-[42vw] h-[42vw] bg-[#60a5fa]/8 blur-[120px] rounded-full"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:14px_14px] opacity-10 mix-blend-overlay" />
       </div>
 
       <main className="relative z-10 mx-auto max-w-7xl px-6">
@@ -193,7 +191,7 @@ export default function ServicesPage() {
               <CredCircles />
           </div>
 
-          <div ref={heroRef} className="relative z-10 grid lg:grid-cols-12 gap-12 items-center mb-16 pt-20">
+          <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center mb-16 pt-20">
             <div className="lg:col-span-8">
               <Motion.p 
                 style={{ opacity: opacityFade }}
