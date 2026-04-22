@@ -1,14 +1,13 @@
-import { Suspense, useLayoutEffect, useMemo, useRef, memo, useState, useEffect } from "react";
+import { Suspense, useMemo, useRef, memo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Environment, Points, PointMaterial } from "@react-three/drei";
-import * as THREE from "three";
 import {
-  motion as Motion,
-  useScroll,
-  useSpring,
-  useTransform,
-  useInView,
-} from "framer-motion";
+  useGLTF,
+  Stage,
+  OrbitControls,
+  Html,
+  useProgress,
+} from "@react-three/drei";
+import { motion as Motion, useInView, useScroll, useSpring } from "framer-motion";
 
 // --- REFINED CONTENT DATA (UNTOUCHED) ---
 const visionPillars = [
@@ -24,68 +23,38 @@ const missionPoints = [
   "Cultivate a new breed of entrepreneurs who are backed to win from day zero.",
 ];
 
-function TechParticles({ count = 2000 }) {
-  const points = useMemo(() => {
-    const p = new Float32Array(count * 3);
-    let seed = 1234567;
-    const random = () => {
-      seed = (seed * 1664525 + 1013904223) % 4294967296;
-      return seed / 4294967296;
-    };
-    for (let i = 0; i < count; i++) {
-      p[i * 3] = (random() - 0.5) * 20;
-      p[i * 3 + 1] = (random() - 0.5) * 20;
-      p[i * 3 + 2] = (random() - 0.5) * 20;
-    }
-    return p;
-  }, [count]);
-
-  const ref = useRef();
-  useFrame((state) => {
-    ref.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-  });
-
-  return (
-    <Points ref={ref} positions={points} stride={3}>
-      <PointMaterial transparent color="#f6c76d" size={0.02} sizeAttenuation={true} depthWrite={false} blending={THREE.AdditiveBlending} />
-    </Points>
-  );
-}
-
-const NetworkModel = memo(({ interactionRef }) => {
+const NetworkModel = memo(({ scrollProgress }) => {
   const group = useRef();
   const { scene } = useGLTF("/knowledge_network.glb");
-  
-  // FAIL-SAFE 1: Fresh clone on every mount
-  const model = useMemo(() => scene.clone(), [scene]);
 
-  // FAIL-SAFE 2: Immediate bounding box calculation
-  useLayoutEffect(() => {
-    if (model) {
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const scaleFactor = 5.0 / Math.max(size.x, size.y, size.z);
-      model.scale.setScalar(scaleFactor);
-    }
-  }, [model]);
+  const model = useMemo(() => scene.clone(true), [scene]);
 
   useFrame((state) => {
     if (!group.current) return;
-    const t = state.clock.getElapsedTime();
-    const pointer = interactionRef.current;
-    
-    // Smooth interaction physics
-    pointer.rotY += (pointer.targetRotY - pointer.rotY) * 0.05;
-    pointer.rotX += (pointer.targetRotX - pointer.rotX) * 0.05;
-    
-    // Combine slow auto-rotation with user input
-    group.current.rotation.y = (t * 0.12) + pointer.rotY;
-    group.current.rotation.x = (Math.sin(t * 0.1) * 0.1) + pointer.rotX;
-    group.current.position.y = Math.sin(t * 0.14) * 0.1;
+
+    const time = state.clock.getElapsedTime();
+    const scrollValue = scrollProgress.get();
+    const drift = scrollValue - 0.5;
+
+    group.current.rotation.y = time * 0.08 + drift * 0.8;
+    group.current.rotation.x = Math.sin(time * 0.08) * 0.05 + drift * 0.18;
+    group.current.position.y = Math.sin(time * 0.12) * 0.03 + drift * 0.08;
   });
 
   return <group ref={group}><primitive object={model} /></group>;
 });
+
+function ModelLoader() {
+  const { progress } = useProgress();
+
+  return (
+    <Html center>
+      <div className="rounded-full border border-white/15 bg-[#02040a]/90 px-5 py-3 text-xs uppercase tracking-[0.35em] text-white/70">
+        Loading model {Math.round(progress)}%
+      </div>
+    </Html>
+  );
+}
 
 const Reveal = ({ children, delay = 0, width = "100%" }) => {
   const ref = useRef(null);
@@ -105,82 +74,22 @@ const Reveal = ({ children, delay = 0, width = "100%" }) => {
 };
 
 export default function AboutPage() {
-  const [isMounted, setIsMounted] = useState(false);
   const { scrollYProgress } = useScroll();
-  const smoothScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-  const bgShift = useTransform(smoothScroll, [0, 1], ["0%", "20%"]);
-  
-  const interactionRef = useRef({
-    dragging: false,
-    lastX: 0,
-    lastY: 0,
-    targetRotX: 0,
-    targetRotY: 0,
-    rotX: 0,
-    rotY: 0,
+  const smoothScroll = useSpring(scrollYProgress, {
+    stiffness: 60,
+    damping: 18,
+    mass: 0.2,
   });
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // FAIL-SAFE 3: Global pointer events mapped specifically to the interaction state
-  const handlePointerDown = (e) => {
-    interactionRef.current.dragging = true;
-    interactionRef.current.lastX = e.clientX;
-    interactionRef.current.lastY = e.clientY;
-  };
-
-  const handlePointerMove = (e) => {
-    if (!interactionRef.current.dragging) return;
-    const dx = e.clientX - interactionRef.current.lastX;
-    const dy = e.clientY - interactionRef.current.lastY;
-    interactionRef.current.targetRotY += dx * 0.005;
-    interactionRef.current.targetRotX += dy * 0.005;
-    interactionRef.current.lastX = e.clientX;
-    interactionRef.current.lastY = e.clientY;
-  };
-
-  const stopDragging = () => {
-    interactionRef.current.dragging = false;
-  };
-
   return (
-    <div 
-      className="relative min-h-screen w-full bg-[#02040a] text-white selection:bg-[#f6c76d] selection:text-black overflow-x-hidden"
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={stopDragging}
-      onPointerLeave={stopDragging}
-      onPointerCancel={stopDragging}
-    >
-      
-      {/* 3D BACKGROUND - FIXED TO RIGHT SIDE */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {isMounted && (
-          <Canvas camera={{ position: [0, 0, 10], fov: 40 }} gl={{ antialias: true, alpha: true }}>
-            <ambientLight intensity={0.6} />
-            <pointLight position={[10, 10, 10]} intensity={2} color="#f6c76d" />
-            <Suspense fallback={null}>
-              <TechParticles />
-              {/* Force Right-Side Positioning */}
-              <group position={[window.innerWidth > 1024 ? 4.5 : 0, 0, 0]}>
-                <NetworkModel interactionRef={interactionRef} />
-              </group>
-              <Environment preset="city" />
-            </Suspense>
-          </Canvas>
-        )}
-      </div>
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#02040a] text-white selection:bg-[#f6c76d] selection:text-black">
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(246,199,109,0.08),transparent_42%),radial-gradient(circle_at_right,rgba(96,165,250,0.08),transparent_32%),linear-gradient(180deg,#02040a_0%,#050816_100%)]" />
+      <div className="fixed inset-0 z-[1] pointer-events-none opacity-20 bg-[url('https://res.cloudinary.com/dlbv8j7p2/image/upload/v1683216828/noise_v1_fm3_q_80_s_2_a_1_v_1_u_1_z_1_r_1_t_1_b_1_c_1_f_1_g_1_h_1_i_1_j_1_k_1_l_1_m_1_n_1_o_1_p_1_q_1_r_1_s_1_t_1_u_1_v_1_w_1_x_1_y_1_z_1.png')] opacity-[0.03]" />
 
-      {/* NOISE OVERLAY */}
-      <Motion.div style={{ y: bgShift }} className="fixed inset-0 z-[1] opacity-20 pointer-events-none bg-[url('https://res.cloudinary.com/dlbv8j7p2/image/upload/v1683216828/noise_v1_fm3_q_80_s_2_a_1_v_1_u_1_z_1_r_1_t_1_b_1_c_1_f_1_g_1_h_1_i_1_j_1_k_1_l_1_m_1_n_1_o_1_p_1_q_1_r_1_s_1_t_1_u_1_v_1_w_1_x_1_y_1_z_1.png')] opacity-[0.03]" />
-
-      <main className="relative z-10 mx-auto max-w-7xl px-6 py-32 space-y-64 pointer-events-none">
-        
-        <section className="min-h-[80vh] flex flex-col justify-center pointer-events-auto">
+      <main className="relative z-10 mx-auto max-w-7xl px-6 py-24 md:py-32 space-y-28">
+        <section className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center min-h-[78vh]">
           <Reveal>
-            <div className="space-y-12 max-w-4xl">
+            <div className="space-y-10 max-w-4xl">
               <div className="flex items-center gap-4">
                 <div className="h-[2px] w-12 bg-[#f6c76d]" />
                 <p className="text-[#f6c76d] font-black tracking-[0.5em] text-sm uppercase">Facilitating Innovation</p>
@@ -198,9 +107,42 @@ export default function AboutPage() {
               </div>
             </div>
           </Reveal>
+
+          <div className="relative">
+            <div className="relative h-[72vh] min-h-[520px] w-full">
+              
+              <Canvas
+                camera={{ position: [0, 0, 12], fov: 32 }}
+                gl={{ antialias: true, alpha: true }}
+                className="h-full w-full"
+              >
+                <Suspense fallback={<ModelLoader />}>
+                  <Stage
+                    adjustCamera={1.08}
+                    intensity={0.9}
+                    environment="city"
+                    shadows={false}
+                    preset="rembrandt"
+                  >
+                    <group scale={1.18}>
+                      <NetworkModel scrollProgress={smoothScroll} />
+                    </group>
+                  </Stage>
+                  <OrbitControls
+                    makeDefault
+                    enablePan={false}
+                    enableZoom={false}
+                    enableDamping
+                    dampingFactor={0.08}
+                    rotateSpeed={0.55}
+                  />
+                </Suspense>
+              </Canvas>
+            </div>
+          </div>
         </section>
 
-        <section className="space-y-24 pointer-events-auto">
+        <section className="space-y-24">
           <Reveal>
              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter">The Vision</h2>
           </Reveal>
@@ -217,7 +159,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="relative overflow-hidden rounded-[4rem] border border-white/10 bg-gradient-to-br from-white/[0.03] to-transparent p-12 md:p-24 pointer-events-auto">
+        <section className="relative overflow-hidden rounded-[4rem] border border-white/10 bg-gradient-to-br from-white/[0.03] to-transparent p-12 md:p-24">
            <div className="grid lg:grid-cols-2 gap-20 items-center">
               <Reveal>
                 <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none">Our<br/><span className="text-[#f6c76d]">Mission</span></h2>
@@ -235,7 +177,7 @@ export default function AboutPage() {
            </div>
         </section>
 
-        <section className="text-center space-y-16 pointer-events-auto">
+        <section className="text-center space-y-16">
           <Reveal>
             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-widest opacity-20">Why Choose BISF</h2>
           </Reveal>
