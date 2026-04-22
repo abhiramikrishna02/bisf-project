@@ -31,7 +31,7 @@ const navItems = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
-  { to: "/contact", label: "Contact" },
+  { to: "/contact", label: "Contacts" },
 ];
 
 export default function Navbar() {
