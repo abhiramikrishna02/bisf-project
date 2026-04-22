@@ -131,7 +131,7 @@ const RollingNumber = ({ value, suffix = "" }) => {
 };
 
 const SectionWrapper = ({ children, className }) => (
-  <section className={`relative min-h-[70vh] flex flex-col justify-center py-16 overflow-visible ${className}`}>
+  <section className={`relative min-h-[60vh] flex flex-col justify-center py-12 overflow-visible md:min-h-[70vh] md:py-16 ${className}`}>
     {children}
   </section>
 );
@@ -182,7 +182,7 @@ export default function ServicesPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:14px_14px] opacity-10 mix-blend-overlay" />
       </div>
 
-      <main className="relative z-10 mx-auto max-w-7xl px-6">
+      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* SECTION: OUR SOLUTION (HERO) - CRED STYLE UPDATE */}
         <SectionWrapper className="perspective-1000">
@@ -191,23 +191,23 @@ export default function ServicesPage() {
               <CredCircles />
           </div>
 
-          <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center mb-16 pt-20">
+          <div className="relative z-10 mb-12 grid items-center gap-10 pt-20 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-8">
               <Motion.p 
                 style={{ opacity: opacityFade }}
-                className="text-[#f6c76d] font-black tracking-[0.5em] text-xs uppercase mb-8"
+                className="mb-6 text-xs font-black uppercase tracking-[0.35em] text-[#f6c76d] sm:mb-8 sm:tracking-[0.5em]"
               >
                 Our Solution
               </Motion.p>
               
-              <div className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] flex flex-col">
+              <div className="flex flex-col text-4xl font-black tracking-tighter leading-[0.95] sm:text-5xl md:text-8xl md:leading-[0.9]">
                 <SequentialIllumination text="BUILDING THE" />
                 <Motion.div
                    initial={{ opacity: 0.1 }}
                    whileInView={{ opacity: 1 }}
                    viewport={{ once: true }}
                    transition={{ delay: 0.8, duration: 1 }}
-                   className="text-transparent font-light py-2" 
+                   className="py-2 font-light text-transparent" 
                    style={{ WebkitTextStroke: "1px rgba(255,255,255,0.4)" }}
                 >
                   INFRASTRUCTURE
@@ -219,7 +219,7 @@ export default function ServicesPage() {
             <div className="lg:col-span-4 flex justify-end">
               <Motion.p 
                 style={{ opacity: useTransform(heroScroll, [0, 0.3], [0.5, 1]) }}
-                className="text-lg md:text-xl text-white/60 leading-relaxed border-l border-[#f6c76d]/50 pl-8 max-w-sm"
+                className="max-w-sm border-l border-[#f6c76d]/50 pl-4 text-base leading-relaxed text-white/60 sm:pl-8 sm:text-lg md:text-xl"
               >
                 Building a startup is hard enough. Doing it without the right infrastructure is nearly impossible. BISF removes the barriers between potential and performance.
               </Motion.p>
@@ -227,7 +227,7 @@ export default function ServicesPage() {
           </div>
 
           {/* ANIMATED SOLUTION CARDS */}
-          <div className="relative z-10 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="relative z-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {solution.map((item, i) => (
               <Motion.div
                 key={i}
@@ -242,12 +242,12 @@ export default function ServicesPage() {
                   borderColor: "rgba(246,199,109,0.3)",
                   transition: { duration: 0.3 }
                 }}
-                className="p-8 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-3xl transition-colors group relative overflow-hidden"
+                className="group relative overflow-hidden rounded-[1.8rem] border border-white/5 bg-white/[0.01] p-6 backdrop-blur-3xl transition-colors sm:p-8 md:rounded-[2.5rem]"
               >
-                <div className="w-10 h-10 mb-10 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-white/40 group-hover:bg-[#f6c76d] group-hover:text-black group-hover:border-[#f6c76d] transition-all duration-500">
+                <div className="mb-8 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-[10px] text-white/40 transition-all duration-500 group-hover:border-[#f6c76d] group-hover:bg-[#f6c76d] group-hover:text-black sm:mb-10">
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <h3 className="text-2xl font-bold mb-4 group-hover:text-[#f6c76d] transition-colors tracking-tight">{item.title}</h3>
+                <h3 className="mb-4 text-xl font-bold tracking-tight transition-colors group-hover:text-[#f6c76d] sm:text-2xl">{item.title}</h3>
                 <p className="text-white/40 leading-relaxed group-hover:text-white/70 transition-colors text-sm">{item.text}</p>
               </Motion.div>
             ))}
@@ -263,10 +263,10 @@ export default function ServicesPage() {
 
         {/* SECTION: OUR APPROACH */}
         <SectionWrapper>
-          <div className="flex flex-col items-center text-center mb-16">
-            <p className="text-[#f6c76d] font-black tracking-[0.4em] text-sm uppercase mb-6">Our Approach</p>
-            <h2 className="text-5xl md:text-8xl font-black tracking-tighter uppercase mb-8">Sequential & <br />Accountable</h2>
-            <p className="max-w-3xl text-2xl text-white/60 font-light">
+          <div className="mb-12 flex flex-col items-center text-center md:mb-16">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.3em] text-[#f6c76d] sm:mb-6 sm:tracking-[0.4em]">Our Approach</p>
+            <h2 className="mb-6 text-4xl font-black uppercase tracking-tighter sm:text-5xl md:mb-8 md:text-8xl">Sequential & <br />Accountable</h2>
+            <p className="max-w-3xl text-lg font-light text-white/60 sm:text-2xl">
               We don’t move to the next step until the current one is solid. Every founder goes through the same four-stage framework—because it works.
             </p>
           </div>
@@ -274,24 +274,24 @@ export default function ServicesPage() {
           <div className="relative">
             <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/10 hidden lg:block" />
             
-            <div className="grid lg:grid-cols-4 gap-8 relative z-10">
+            <div className="relative z-10 grid gap-4 lg:grid-cols-4 sm:gap-6 lg:gap-8">
               {approach.map((step, i) => (
                 <Motion.div 
                   key={i}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-[#02040a]/80 backdrop-blur-md p-8 border border-white/10 rounded-3xl"
+                  className="rounded-3xl border border-white/10 bg-[#02040a]/80 p-6 backdrop-blur-md sm:p-8"
                 >
-                  <span className="text-6xl font-black text-white/5 block mb-4">{step.no}</span>
-                  <h3 className="text-3xl font-bold text-[#f6c76d] mb-4">{step.title}</h3>
+                  <span className="mb-4 block text-5xl font-black text-white/5 sm:text-6xl">{step.no}</span>
+                  <h3 className="mb-4 text-2xl font-bold text-[#f6c76d] sm:text-3xl">{step.title}</h3>
                   <p className="text-white/50 leading-relaxed">{step.text}</p>
                 </Motion.div>
               ))}
             </div>
           </div>
-          <div className="mt-12 p-10 rounded-[3rem] bg-gradient-to-r from-[#f6c76d]/10 to-transparent border border-[#f6c76d]/20 backdrop-blur-sm">
-              <p className="text-xl text-white/80 leading-relaxed italic text-center">
+          <div className="mt-10 rounded-[2rem] border border-[#f6c76d]/20 bg-gradient-to-r from-[#f6c76d]/10 to-transparent p-6 backdrop-blur-sm md:mt-12 md:rounded-[3rem] md:p-10">
+              <p className="text-center text-base leading-relaxed text-white/80 italic sm:text-xl">
                 Accountability is not an afterthought at BISF - it is built into the architecture. Every investor can see exactly where each portfolio company sits.
               </p>
           </div>
@@ -351,14 +351,14 @@ export default function ServicesPage() {
 
         {/* SECTION: GROWTH POTENTIAL - UPDATED WITH HIGH ENERGY ANIMATIONS */}
         <SectionWrapper>
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
+          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <Motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-5 space-y-8"
+              className="space-y-8 lg:col-span-5"
             >
-               <h2 className="text-6xl md:text-7xl font-black uppercase leading-[0.85] tracking-tighter">
+               <h2 className="text-4xl font-black uppercase leading-[0.95] tracking-tighter sm:text-5xl md:text-7xl md:leading-[0.85]">
                 Growth <br />
                 <span className="text-[#f6c76d] inline-block">
                   Potential
@@ -370,7 +370,7 @@ export default function ServicesPage() {
                   />
                 </span>
                </h2>
-               <p className="text-white/60 text-xl font-light leading-relaxed">
+               <p className="text-base font-light leading-relaxed text-white/60 sm:text-xl">
                 Structured returns are just the beginning. The underlying value grows in a way dividends alone can never capture.
                </p>
                
@@ -381,16 +381,16 @@ export default function ServicesPage() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 + 0.3 }}
-                    className="flex items-center gap-4 text-white/80 group cursor-default"
+                    className="group flex cursor-default items-center gap-4 text-white/80"
                    >
                      <div className="h-2 w-2 rounded-full bg-[#f6c76d] shadow-[0_0_10px_rgba(246,199,109,0.5)] group-hover:scale-150 transition-transform" /> 
-                     <span className="text-lg font-medium group-hover:text-[#f6c76d] transition-colors">{item}</span>
+                     <span className="text-base font-medium transition-colors group-hover:text-[#f6c76d] sm:text-lg">{item}</span>
                    </Motion.div>
                  ))}
                </div>
             </Motion.div>
 
-            <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+            <div className="grid h-full grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:col-span-7">
                <Motion.div 
                 whileHover={{ 
                   scale: 1.02, 
@@ -399,11 +399,11 @@ export default function ServicesPage() {
                   boxShadow: "0 20px 40px rgba(0,0,0,0.4)" 
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="aspect-square bg-white/5 rounded-[3.5rem] p-12 flex flex-col justify-between border border-white/10 backdrop-blur-md group overflow-hidden relative"
+                className="relative aspect-square overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-6 backdrop-blur-md group flex flex-col justify-between sm:p-10 md:rounded-[3.5rem] md:p-12"
                >
                   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="text-sm tracking-[0.5em] text-[#f6c76d] uppercase font-bold">Valuation Floor</span>
-                  <div className="text-7xl font-black uppercase tracking-tighter">
+                  <div className="text-5xl font-black uppercase tracking-tighter sm:text-7xl">
                     ₹<RollingNumber value="30" suffix="L" />
                   </div>
                   <p className="text-white/40 uppercase text-xs tracking-widest font-medium">Long-term Projection</p>
@@ -417,7 +417,7 @@ export default function ServicesPage() {
                   boxShadow: "0 25px 50px rgba(246,199,109,0.2)" 
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="aspect-square bg-[#f6c76d] text-black rounded-[3.5rem] p-12 flex flex-col justify-between relative overflow-hidden group shadow-2xl"
+                className="relative aspect-square overflow-hidden rounded-[2.5rem] bg-[#f6c76d] p-6 text-black group flex flex-col justify-between shadow-2xl sm:p-10 md:rounded-[3.5rem] md:p-12"
                >
                   <Motion.div 
                     animate={{ 
@@ -428,7 +428,7 @@ export default function ServicesPage() {
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent -skew-x-12"
                   />
                   <span className="text-sm tracking-[0.5em] uppercase opacity-60 font-bold">Valuation Ceiling</span>
-                  <div className="text-7xl font-black uppercase tracking-tighter">
+                  <div className="text-5xl font-black uppercase tracking-tighter sm:text-7xl">
                     ₹<RollingNumber value="1" suffix="Cr" />
                   </div>
                   <p className="text-black/60 uppercase text-xs tracking-widest font-bold">Targeted Milestone</p>
@@ -440,15 +440,15 @@ export default function ServicesPage() {
         {/* SECTION: BENEFITS & PRIVILEGES */}
         <SectionWrapper>
           <div className="mb-12">
-             <h2 className="text-4xl md:text-6xl font-black text-center uppercase tracking-widest opacity-20">Investor Foundations</h2>
+             <h2 className="text-center text-3xl font-black uppercase tracking-widest opacity-20 sm:text-4xl md:text-6xl">Investor Foundations</h2>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {benefits.map((b, i) => (
               <Motion.div 
                 key={i} 
                 whileHover={{ backgroundColor: "rgba(255,255,255,0.05)" }}
-                className="p-8 border border-white/5 bg-white/[0.01] rounded-2xl backdrop-blur-md"
+                className="rounded-2xl border border-white/5 bg-white/[0.01] p-6 backdrop-blur-md sm:p-8"
               >
                 <h4 className="text-[#f6c76d] font-bold mb-4 uppercase tracking-tighter">{b.title}</h4>
                 <p className="text-sm text-white/50 leading-relaxed">{b.text}</p>
@@ -456,29 +456,29 @@ export default function ServicesPage() {
             ))}
           </div>
 
-          <div className="mt-20">
-             <div className="flex flex-col items-center mb-12">
+          <div className="mt-16 md:mt-20">
+             <div className="mb-10 flex flex-col items-center md:mb-12">
                 <div className="h-16 w-[1px] bg-gradient-to-b from-transparent to-[#f6c76d] mb-8" />
-                <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter">Exclusive Privileges</h2>
+                <h2 className="text-4xl font-black uppercase tracking-tighter sm:text-5xl md:text-8xl">Exclusive Privileges</h2>
              </div>
 
-             <div className="grid lg:grid-cols-3 gap-12">
+             <div className="grid gap-8 lg:grid-cols-3 lg:gap-12">
                {privileges.map((p, i) => (
                  <div key={i} className="relative group">
-                    <div className="text-6xl font-black mb-6 opacity-10 group-hover:opacity-100 transition-opacity text-[#f6c76d]">{p.val}</div>
+                    <div className="mb-4 text-4xl font-black text-[#f6c76d] transition-opacity opacity-10 group-hover:opacity-100 sm:mb-6 sm:text-6xl">{p.val}</div>
                     <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">{p.title}</h3>
                     <p className="text-white/50 leading-relaxed">{p.text}</p>
                  </div>
                ))}
              </div>
 
-             <div className="mt-24 text-center">
+             <div className="mt-16 text-center md:mt-24">
                 <Motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  className="inline-block p-12 border border-[#f6c76d]/20 rounded-[4rem] bg-gradient-to-t from-[#f6c76d]/5 to-transparent backdrop-blur-sm"
+                  className="inline-block rounded-[2rem] border border-[#f6c76d]/20 bg-gradient-to-t from-[#f6c76d]/5 to-transparent p-6 backdrop-blur-sm sm:p-10 md:rounded-[4rem] md:p-12"
                 >
-                   <p className="text-3xl md:text-5xl font-light italic tracking-tight text-white/80">
+                   <p className="text-2xl font-light italic tracking-tight text-white/80 sm:text-3xl md:text-5xl">
                     “We invest in you as much as <br /> you <span className="text-[#f6c76d] font-bold">invest in us.</span>”
                    </p>
                 </Motion.div>

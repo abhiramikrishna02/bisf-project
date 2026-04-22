@@ -189,28 +189,28 @@ export default function AboutPage() {
       <div className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_top,rgba(246,199,109,0.08),transparent_42%),radial-gradient(circle_at_right,rgba(96,165,250,0.08),transparent_32%),linear-gradient(180deg,#02040a_0%,#050816_100%)]" />
       <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.06] bg-[radial-gradient(circle,rgba(255,255,255,0.11)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-      <main className="relative z-10 mx-auto max-w-7xl px-6 py-24 md:py-32 space-y-28">
+      <main className="relative z-10 mx-auto max-w-7xl px-4 py-16 space-y-20 sm:px-6 md:py-24 md:space-y-28">
         {/* HERO SECTION (UNTOUCHED) */}
-        <section className="grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center min-h-[78vh]">
+        <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center min-h-[70vh] md:gap-14 md:min-h-[78vh]">
           <Reveal>
-            <div className="space-y-10 max-w-4xl">
+            <div className="max-w-4xl space-y-8 md:space-y-10">
               <div className="flex items-center gap-4">
                 <div className="h-[2px] w-12 bg-[#f6c76d]" />
-                <p className="text-[#f6c76d] font-black tracking-[0.5em] text-sm uppercase">Facilitating Innovation</p>
+                <p className="text-xs font-black uppercase tracking-[0.35em] text-[#f6c76d] sm:text-sm sm:tracking-[0.5em]">Facilitating Innovation</p>
               </div>
-              <h1 className="text-7xl md:text-[10rem] font-black tracking-tighter leading-[0.85] uppercase">
+              <h1 className="text-5xl font-black uppercase tracking-tighter leading-[0.9] sm:text-6xl md:text-[10rem] md:leading-[0.85]">
                 About <span className="text-transparent stroke-white" style={{ WebkitTextStroke: "2px rgba(255,255,255,0.1)" }}>BISF</span>
               </h1>
               <ScrollRevealText value="BISF, Bharat Innovation & Startup Facilitator, is a venture-building ecosystem that brings founders, operators, and investors together." />
-              <div className="pt-8">
-                <p className="max-w-2xl text-lg text-white/40 leading-relaxed border-l-4 border-[#f6c76d] pl-8 italic">
+              <div className="pt-4 sm:pt-8">
+                <p className="max-w-2xl border-l-4 border-[#f6c76d] pl-4 text-base leading-relaxed text-white/40 italic sm:pl-8 sm:text-lg">
                   We work with founders, not just around them. We identify high-potential talent early and give them the structure to grow with conviction.
                 </p>
               </div>
             </div>
           </Reveal>
           <div className="relative">
-            <div className="relative h-[72vh] min-h-[520px] w-full">
+            <div className="relative h-[56vh] min-h-[360px] w-full sm:h-[62vh] md:h-[72vh] md:min-h-[520px]">
               <Canvas camera={{ position: [0, 0, 12], fov: 32 }} gl={{ antialias: true, alpha: true }} className="h-full w-full">
                 <Suspense fallback={<ModelLoader />}>
                   <ModelErrorBoundary>
@@ -228,20 +228,20 @@ export default function AboutPage() {
         </section>
 
         {/* VISION SECTION */}
-        <section className="relative py-20">
-          <div className="relative z-10 space-y-24">
+        <section className="relative py-12 md:py-20">
+          <div className="relative z-10 space-y-14 md:space-y-24">
             <BouncyReveal>
-              <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-center">The Vision</h2>
+              <h2 className="text-4xl font-black uppercase tracking-tighter text-center sm:text-5xl md:text-8xl">The Vision</h2>
             </BouncyReveal>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid gap-5 md:grid-cols-3 md:gap-8">
               {visionPillars.map((pillar, i) => (
                 <BouncyReveal key={i} delay={i * 0.1}>
                   <Motion.div 
                     whileHover={{ y: -10, scale: 1.02 }}
-                    className="h-full group p-10 rounded-[2.5rem] border border-white/10 bg-[#02040a]/35 backdrop-blur-xl transition-all duration-500"
+                    className="h-full group rounded-[2rem] border border-white/10 bg-[#02040a]/35 p-6 backdrop-blur-xl transition-all duration-500 sm:p-8 md:rounded-[2.5rem] md:p-10"
                   >
-                    <div className="mb-8 text-[#f6c76d] font-bold text-xs tracking-widest uppercase">0{i + 1} // Pillar</div>
-                    <h3 className="text-2xl font-bold mb-4">{pillar.title}</h3>
+                    <div className="mb-6 text-xs font-bold uppercase tracking-widest text-[#f6c76d] md:mb-8">0{i + 1} // Pillar</div>
+                    <h3 className="mb-4 text-xl font-bold md:text-2xl">{pillar.title}</h3>
                     <p className="text-white/50 leading-relaxed group-hover:text-white/80 transition-colors">{pillar.text}</p>
                   </Motion.div>
                 </BouncyReveal>
@@ -251,19 +251,19 @@ export default function AboutPage() {
         </section>
 
         {/* MISSION SECTION (UNTOUCHED) */}
-        <section className="relative overflow-hidden rounded-[4rem] border border-[#f6c76d]/20 bg-gradient-to-br from-[#f6c76d]/5 to-transparent p-12 md:p-24 backdrop-blur-md">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <section className="relative overflow-hidden rounded-[2rem] border border-[#f6c76d]/20 bg-gradient-to-br from-[#f6c76d]/5 to-transparent p-6 backdrop-blur-md sm:p-10 md:rounded-[4rem] md:p-24">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-20">
             <BouncyReveal>
-              <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none">
+              <h2 className="text-4xl font-black uppercase tracking-tighter leading-none sm:text-5xl md:text-9xl">
                 Our<br /><span className="text-[#f6c76d]">Mission</span>
               </h2>
             </BouncyReveal>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {missionPoints.map((point, i) => (
                 <BouncyReveal key={i} delay={0.2 + (i * 0.1)}>
-                  <div className="flex items-start gap-6 group">
+                  <div className="group flex items-start gap-4 sm:gap-6">
                     <div className="mt-2 h-2 w-2 rounded-full bg-[#f6c76d] group-hover:scale-150 transition-transform" />
-                    <p className="text-xl md:text-2xl font-medium text-white/70 group-hover:text-white transition-colors">
+                    <p className="text-lg font-medium text-white/70 transition-colors group-hover:text-white md:text-2xl">
                       {point}
                     </p>
                   </div>
@@ -274,27 +274,27 @@ export default function AboutPage() {
         </section>
 
         {/* WHY CHOOSE SECTION (UNTOUCHED) */}
-        <section className="text-center space-y-16">
+        <section className="space-y-10 text-center md:space-y-16">
           <Reveal>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-widest opacity-20">Why Choose BISF</h2>
+            <h2 className="text-3xl font-black uppercase tracking-widest opacity-20 sm:text-4xl md:text-6xl">Why Choose BISF</h2>
           </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { l: "BACKED BY", v: "iQue Global" },
-              { l: "PIPELINE", v: "Curated" },
-              { l: "MODEL", v: "Execution" },
-              { l: "TERMS", v: "Structured" },
-            ].map((s, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <div className="p-12 rounded-[2rem] bg-white/[0.03] border border-white/5 hover:border-[#f6c76d]/30 transition-colors">
-                  <div className="text-[10px] tracking-[0.3em] text-white/30 mb-4">{s.l}</div>
-                  <div className="text-2xl font-black text-[#f6c76d]">{s.v}</div>
-                </div>
-              </Reveal>
-            ))}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+              {[
+                { l: "BACKED BY", v: "iQue Global" },
+                { l: "PIPELINE", v: "Curated" },
+                { l: "MODEL", v: "Execution" },
+                { l: "TERMS", v: "Structured" },
+              ].map((s, i) => (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div className="rounded-[1.5rem] border border-white/5 bg-white/[0.03] p-6 transition-colors hover:border-[#f6c76d]/30 sm:p-8 md:rounded-[2rem] md:p-12">
+                    <div className="mb-4 text-[10px] tracking-[0.3em] text-white/30">{s.l}</div>
+                    <div className="text-xl font-black text-[#f6c76d] sm:text-2xl">{s.v}</div>
+                  </div>
+                </Reveal>
+              ))}
           </div>
           <Reveal>
-            <p className="max-w-3xl mx-auto text-2xl text-white/40 italic font-light leading-relaxed">
+            <p className="mx-auto max-w-3xl text-lg font-light leading-relaxed text-white/40 italic sm:text-2xl">
               "The philosophy is human-first: investors are treated as partners, and their experience, confidence, and returns are part of the same commitment."
             </p>
           </Reveal>
